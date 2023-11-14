@@ -1,0 +1,4 @@
+node_modules
+/ClientSideAngular/node_modules
+.env
+/ServerSideFlask/.venv
