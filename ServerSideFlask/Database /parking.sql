@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2023 at 03:44 PM
+-- Generation Time: Nov 14, 2023 at 06:18 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -11,9 +11,7 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-/*
-Hello
-*/
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -22,6 +20,29 @@ Hello
 --
 -- Database: `parking`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statuss`
+--
+
+CREATE TABLE `statuss` (
+  `id` int(10) NOT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stat_vehic`
+--
+
+CREATE TABLE `stat_vehic` (
+  `id_vehicule` int(10) NOT NULL,
+  `id_status` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -68,6 +89,19 @@ CREATE TABLE `vehicle` (
 --
 
 --
+-- Indexes for table `statuss`
+--
+ALTER TABLE `statuss`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stat_vehic`
+--
+ALTER TABLE `stat_vehic`
+  ADD PRIMARY KEY (`id_vehicule`),
+  ADD KEY `fr_er` (`id_status`);
+
+--
 -- Indexes for table `subscription`
 --
 ALTER TABLE `subscription`
@@ -92,6 +126,12 @@ ALTER TABLE `vehicle`
 --
 
 --
+-- AUTO_INCREMENT for table `statuss`
+--
+ALTER TABLE `statuss`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `subscription`
 --
 ALTER TABLE `subscription`
@@ -112,6 +152,13 @@ ALTER TABLE `vehicle`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `stat_vehic`
+--
+ALTER TABLE `stat_vehic`
+  ADD CONSTRAINT `fr1` FOREIGN KEY (`id_vehicule`) REFERENCES `vehicle` (`id`),
+  ADD CONSTRAINT `fr_er` FOREIGN KEY (`id_status`) REFERENCES `statuss` (`id`);
 
 --
 -- Constraints for table `vehicle`
