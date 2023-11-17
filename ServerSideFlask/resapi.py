@@ -18,7 +18,8 @@ mydb = SQLAlchemy(app)
 # Model 
 Status_Vehicule = mydb.Table('stat_vehic',
     mydb.Column('id_vehicule', mydb.Integer, mydb.ForeignKey('vehicle.id')),
-    mydb.Column('id_status', mydb.Integer, mydb.ForeignKey('statuss.id'))
+    mydb.Column('id_status', mydb.Integer, mydb.ForeignKey('statuss.id')) ,
+    mydb.Column('date' , mydb.Date )
 )
 
 class Vehicle(mydb.Model):
@@ -32,7 +33,6 @@ class Vehicle(mydb.Model):
 class Statuss(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
     type = mydb.Column(mydb.String(255))
-    date = mydb.Column(mydb.DateTime)
 
 class Subscription(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
@@ -83,25 +83,6 @@ def deleteVehicle():
     else:
         return jsonify({"message": "Vehicle not found"})
     
-
-@app.route('/updateVehicle', methods=['PUT'])
-def updateVehicle():
-    body = request.json
-    vehicle_id = body.get('vehicle_id')
-    new_matricule = body.get('new_matricule')
-    new_model = body.get('new_model')
-
-    # Query the database to find the vehicle with the given ID
-    myVehicle = Vehicle.query.get(vehicle_id)
-
-    if myVehicle:
-        # Update the vehicle if it exists
-        myVehicle.matricule = new_matricule
-        myVehicle.model = new_model
-        mydb.session.commit()
-        return jsonify({"message": "Vehicle updated successfully"})
-    else:
-        return jsonify({"message": "Vehicle not found"})
     
 # for Subscription 
     
@@ -133,25 +114,6 @@ def deleteSubscription():
         mydb.session.delete(mySubscription)
         mydb.session.commit()
         return jsonify({"message": "Subscription deleted successfully"})
-    else:
-        return jsonify({"message": "Subscription not found"})
-
-@app.route('/updateSubscription', methods=['PUT'])
-def updateSubscription():
-    args = request.json
-    subscription_id = args.get('subscription_id')
-    new_type = args.get('new_type')
-    new_description = args.get('new_description')
-
-    # Query the database to find the subscription with the given ID
-    mySubscription = Subscription.query.get(subscription_id)
-
-    if mySubscription:
-        # Update the subscription if it exists
-        mySubscription.type = new_type
-        mySubscription.description = new_description
-        mydb.session.commit()
-        return jsonify({"message": "Subscription updated successfully"})
     else:
         return jsonify({"message": "Subscription not found"})
     
@@ -189,29 +151,6 @@ def deleteUser():
     else:
         return jsonify({"message": "User not found"})
 
-@app.route('/updateUser', methods=['PUT'])
-def updateUser():
-    args = request.json
-    user_id = args.get('user_id')
-    new_name = args.get('new_name')
-    new_username = args.get('new_username')
-    new_password = args.get('new_password')
-    new_age = args.get('new_age')
-
-    # Query the database to find the user with the given ID
-    myUser = User.query.get(user_id)
-
-    if myUser:
-        # Update the user if it exists
-        myUser.name = new_name
-        myUser.username = new_username
-        myUser.password = new_password
-        myUser.age = new_age
-        mydb.session.commit()
-        return jsonify({"message": "User updated successfully"})
-    else:
-        return jsonify({"message": "User not found"})
-
 # Associate a status for a vehicle 
 
 @app.route('/assignStatusToVehicle', methods=['GET'])
@@ -229,7 +168,7 @@ def assignStatusToVehicle():
         if myStatus:
             # Assign the status to the vehicle with the current date
             myVehicle.following.append(myStatus)
-            # myStatus.date = datetime.now()
+            myStatus.date = datetime.now()
 
             mydb.session.commit()
             return jsonify({"message": "Status assigned to the vehicle successfully"})
