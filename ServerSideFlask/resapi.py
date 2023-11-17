@@ -1,6 +1,7 @@
 # import crypt
 
-from flask import Flask , redirect, request  , jsonify
+from hashlib import scrypt
+from flask import Flask, request, jsonify
 import json
 from flask_cors import CORS
 from flask_mysqldb import MySQL
