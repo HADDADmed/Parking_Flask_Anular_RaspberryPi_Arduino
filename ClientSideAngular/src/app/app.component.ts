@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { VehicleComponent } from './components/vehicle/vehicle.component';
+import { VehicleComponent } from './vehicle/vehicle.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  templateUrl: './app.component.html',
+  imports: [VehicleComponent ],
+  template: `
+  <app-vehicle></app-vehicle>
+  `,
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
