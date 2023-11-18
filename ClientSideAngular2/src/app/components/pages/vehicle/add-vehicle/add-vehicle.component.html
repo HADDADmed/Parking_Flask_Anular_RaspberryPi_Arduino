@@ -1,0 +1,22 @@
+<div class="container mt-5">
+  <h2>Enregistrer un véhicule</h2>
+  <form [formGroup]="applyForm" (submit)="saveVehicle()">
+    <div class="mb-3">
+      <label for="matricule" class="form-label">Matricule :</label>
+      <input type="text" id="matricule" formControlName="matricule" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="model" class="form-label">Model :</label>
+      <input type="text" id="model" formControlName="model" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="userId" class="form-label">L'utilisateur :</label>
+      <input type="number" id="userId" formControlName="userId" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="abonnement_id" class="form-label">L'abonnement :</label>
+      <input type="number" id="abonnement_id" formControlName="abonnement_id" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Ajouter la voiture</button>
+  </form>
+</div>
