@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 mydb = SQLAlchemy(app)
 
 # Model 
+
 Status_Vehicule = mydb.Table('stat_vehic',
     mydb.Column('id_vehicule', mydb.Integer, mydb.ForeignKey('vehicle.id')),
     mydb.Column('id_status', mydb.Integer, mydb.ForeignKey('statuss.id'))
@@ -50,8 +51,26 @@ class User(mydb.Model):
     vehicles = mydb.relationship('Vehicle', backref='user')
 
 
+@app.route('/')
+def index():
+    return "Hello World"
+
+
 # API and Routes
 # for Vehicle
+
+# login 
+@app.route('/login', methods=['POST'])
+def login():
+    args = request.json
+    username = args.get('username')
+    password = args.get('password')
+    print(username)
+    print(password)
+    return jsonify({"message": "login successfully"})
+     
+    
+    
 
 @app.route('/saveVehicule', methods=['POST'])
 def saveVehicule():
@@ -60,7 +79,6 @@ def saveVehicule():
     model = args.get('model')
     userId = args.get('userId')
     sub_id = args.get('abonnement_id')
-
     myvecle = Vehicle(id= 0 , matricule=matrecule , model=model , user_id = userId , sub_id=sub_id)
     mydb.session.add(myvecle)
     mydb.session.commit()

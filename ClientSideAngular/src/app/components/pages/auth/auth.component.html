@@ -1,0 +1,14 @@
+ <div class="loginBox"> <img class="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px">
+
+  <h3>Login</h3>
+  <form #loginForm="ngForm" (ngSubmit)="onClickSubmit(loginForm.value)">
+      <div class="inputBox">
+        <input id="uname"  type="text" name="username" placeholder="username" ngModel>
+       <input id="pass" type="password" name="password" placeholder="password" ngModel>
+      </div>
+       <input type="submit" name="" value="submit">
+  </form>
+  <a href="#">Forget Password<br> </a>
+
+
+
