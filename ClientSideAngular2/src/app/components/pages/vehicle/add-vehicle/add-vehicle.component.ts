@@ -1,18 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl , FormGroup , ReactiveFormsModule } from '@angular/forms';
+import { FormControl , FormGroup ,FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-vehicle',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule, ReactiveFormsModule],
   templateUrl: './add-vehicle.component.html',
   styleUrl: './add-vehicle.component.css'
 })
 export class AddVehicleComponent {
   route : ActivatedRoute = inject(ActivatedRoute) ;
- 
+
   applyForm = new FormGroup({
     matricule : new FormControl('') ,
     model : new FormControl(''),
@@ -31,5 +31,5 @@ export class AddVehicleComponent {
     //   this.applyForm.value.abonnement_id ?? 0
     //   );
     //   this.applyForm.reset() ;
-  // }
+   }
 }
