@@ -21,8 +21,13 @@
     "@angular/router": "^17.0.0",
     "@angular/ssr": "^17.0.0",
     "bootstrap": "^5.3.2",
+<<<<<<< HEAD
     "bootstrap-icons": "^1.11.1",
+=======
+>>>>>>> 02e7906fc5dd6694018df41c07e133ac74c18137
     "express": "^4.18.2",
+    "jquery": "^3.7.1",
+    "popper.js": "^1.16.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

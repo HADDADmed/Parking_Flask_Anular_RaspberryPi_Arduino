@@ -26,12 +26,23 @@
             ],
             "styles": [
               "src/styles.css",
+<<<<<<< HEAD
               "node_modules/bootstrap/scss/bootstrap.scss",
   "node_modules/bootstrap-icons/font/bootstrap-icons.css"
 
              ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+=======
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/popper.js/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+>>>>>>> 02e7906fc5dd6694018df41c07e133ac74c18137
             ],
             "server": "src/main.server.ts",
             "prerender": true,
