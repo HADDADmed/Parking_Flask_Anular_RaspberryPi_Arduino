@@ -34,6 +34,8 @@ class Vehicle(mydb.Model):
     model = mydb.Column(mydb.String(255))
     user_id = mydb.Column(mydb.Integer, mydb.ForeignKey('user.id'))
     status = mydb.relationship('StatussVehicule' , back_populates='vehicle')
+    
+    
 class Statuss(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
     type = mydb.Column(mydb.String(255))
@@ -60,6 +62,7 @@ class User(mydb.Model):
     username = mydb.Column(mydb.String(255))
     password = mydb.Column(mydb.String(255))
     age = mydb.Column(mydb.Integer)
+    isAdmin = mydb.Column(mydb.Boolean)
     vehicles = mydb.relationship('Vehicle', backref='user')
 
 
@@ -87,6 +90,15 @@ def login():
     print(username)
     print(password)
     return jsonify({"message": "login successfully"})
+
+
+
+@app.route('/vehicles', methods=['GET'])
+def get_vehicles():
+    vehicles = Vehicle.query.all()
+    vehicles = list(map(lambda vehicle: vehicle.serialize(), vehicles))
+    return jsonify({"vehicles": vehicles})
+
 
 @app.route('/saveVehicule', methods=['POST'])
 def saveVehicule():
@@ -119,6 +131,15 @@ def saveSubscription():
 
     return jsonify({"message": "Subscription saved successfully", "id": newSubscription.id})
     
+    
+   
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    users = list(map(lambda user: user.serialize(), users))
+    return jsonify({"users": users})
+
+
 # for User 
 @app.route('/saveUser', methods=['POST'])
 def saveUser():
@@ -171,9 +192,9 @@ def assign_status_to_vehicle():
 
 @app.route('/assignSubscriptionToVehicle', methods=['POST'])
 def assign_sub_vehicle():
-    basic = 24
-    moyen = 48
-    vip = 86
+    basic = 
+    moyen = 48/60
+    vip = 86/60
     
     args = request.json 
     id_vehicle = args.get("id_vehicle") 
