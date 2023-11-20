@@ -24,14 +24,14 @@ class StatussVehicule(mydb.Model):
     id_vehicule = mydb.Column('id_vehicule', mydb.Integer, mydb.ForeignKey('vehicle.id'), primary_key=True)
     id_status = mydb.Column('id_status', mydb.Integer, mydb.ForeignKey('statuss.id'), primary_key=True)
     date = mydb.Column('date', mydb.DateTime)
+    time = mydb.Column('time',mydb.Integer)
     vehicle = mydb.relationship('Vehicle', back_populates='status')
     status = mydb.relationship('Statuss', back_populates='vehicles')
-
-
 class Vehicle(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
     matricule = mydb.Column(mydb.String(255))
     model = mydb.Column(mydb.String(255))
+    sub_id = mydb.Column(mydb.Integer, mydb.ForeignKey('subscription.id'))
     user_id = mydb.Column(mydb.Integer, mydb.ForeignKey('user.id'))
     status = mydb.relationship('StatussVehicule' , back_populates='vehicle')
 class Statuss(mydb.Model):
@@ -39,20 +39,11 @@ class Statuss(mydb.Model):
     type = mydb.Column(mydb.String(255))
     vehicles = mydb.relationship('StatussVehicule' ,back_populates='status')  # Correction ici
 
-
 class Subscription(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
     type = mydb.Column(mydb.String(255))
     description = mydb.Column(mydb.String(255))
-    vehicles = mydb.relationship('SubscriptionVehicle', back_populates='subscription')
-
-class SubscriptionVehicle(mydb.Model):
-   __tablename__ = 'subc_vehic'
-   id = mydb.Column(mydb.Integer, primary_key=True)
-   id_vehicle = mydb.Column('id_vehicule', mydb.Integer, mydb.ForeignKey('vehicle.id'))
-   id_subc = mydb.Column('id_subc', mydb.Integer, mydb.ForeignKey('subscription.id'))
-   time =  mydb.Column('time', mydb.Time)
-   subscription = mydb.relationship('Subscription', back_populates='vehicles')
+    vehicles = mydb.relationship('Vehicle', backref='subscription')
 
 class User(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
@@ -65,6 +56,7 @@ class User(mydb.Model):
 
 @app.route('/')
 def index():
+    mydb.create_all() 
     return "Hello World"
 
 
@@ -91,7 +83,6 @@ def saveVehicule():
     myvecle = Vehicle(id= 0 , matricule=matrecule , model=model , user_id = userId , sub_id=sub_id)
     mydb.session.add(myvecle)
     mydb.session.commit()
-    
     return jsonify({"message": "Vehicle saved successfully"})
     
     
@@ -132,11 +123,11 @@ def saveUser():
 
 # Associate a status for a vehicle 
 
-@app.route('/assignStatusToVehicle', methods=['GET'])
+@app.route('/assignStatusToVehicle', methods=['Post'])
 def assign_status_to_vehicle():
     try:
         # Récupérer les données du corps de la requête au format JSON
-        data = request.args
+        data = request.json
         # Extraire les informations nécessaires du corps de la requête
         vehicle_id = data.get('vehicle_id')
         status_id = data.get('status_id')
@@ -145,11 +136,18 @@ def assign_status_to_vehicle():
         my_vehicle = Vehicle.query.get(vehicle_id)
         my_status = Statuss.query.get(status_id)
 
-        if my_vehicle and my_status:
+        subscription = Subscription.query.get(my_vehicle.sub_id)
+
+        if my_vehicle and my_status and subscription :
             # Créer un objet StatussVehicule avec la date actuelle
             assignment_date = datetime.now().date()
-            status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date)
-
+            if subscription.type == 'basic' : 
+                status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 24)
+            elif subscription.type == 'moyen' :
+                status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 48)
+            else :
+                status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 86)
+           
             # Ajouter l'objet StatussVehicule à la liste de "status" du véhicule
             my_vehicle.status.append(status_vehicle)
 
@@ -161,33 +159,6 @@ def assign_status_to_vehicle():
             return jsonify({"message": "Véhicule ou statut introuvable"})
     except Exception as e:
         return jsonify({"error": str(e)})
-
-@app.route('/assignSubscriptionToVehicle', methods=['POST'])
-def assign_sub_vehicle():
-    basic = 24
-    moyen = 48
-    vip = 86
-    
-    args = request.json 
-    id_vehicle = args.get("id_vehicle") 
-    id_subc = args.get("id_subc")
-    
-    subscription = Subscription.query.get(id_subc)
-    vehicle = Vehicle.query.get(id_vehicle)
-    
-    if subscription  and vehicle :
-        if subscription.type == "basic":
-            new_subscription_vehicle = SubscriptionVehicle(id_vehicle=id_vehicle, id_subc=id_subc, time=basic)
-        elif subscription.type == "moyen":
-            new_subscription_vehicle = SubscriptionVehicle(id_vehicle=id_vehicle, id_subc=id_subc, time=moyen)
-        elif subscription.type == "vip":
-            new_subscription_vehicle = SubscriptionVehicle(id_vehicle=id_vehicle, id_subc=id_subc, time=vip)
-        mydb.session.add(new_subscription_vehicle)
-        mydb.session.commit()
-        
-        return jsonify({"message": "Subscription assignée au véhicule avec succès"})
-    else:
-        return jsonify({"message": "La subscription ou la vehicule n'existe pas "})
       
 
 if __name__ == '__main__':
