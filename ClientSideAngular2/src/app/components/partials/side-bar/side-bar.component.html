@@ -1,37 +1,88 @@
+<div class="area"></div>
 
-<nav>
+<nav class="main-menu">
   <ul>
     <li>
-      <div class="home-icon">
-        <div class="roof">
-          <div class="roof-edge"></div>
-        </div>
-        <div class="front"></div>
-      </div>
-    </li>
+      .
+   </li><li>
+    .
+ </li><li>
+  .
+</li>
     <li>
-      <div class="about-icon">
-        <div class="head">
-          <div class="eyes"></div>
-          <div class="beard"></div>
-        </div>
-      </div>
-    </li>
-    <li>
-      <div class="work-icon">
-        <div class="paper"></div>
-        <div class="lines"></div>
-        <div class="lines"></div>
-        <div class="lines"></div>
-      </div>
-    </li>
-    <li>
-      <div class="mail-icon">
-        <div class="mail-base">
-          <div class="mail-top"></div>
-        </div>
-      </div>
-    </li>
+      .
+   </li>
+
+      <li>
+          <a  (click)="redirectTo('/dashboard')" >
+              <i class="fa fa-home fa-2x"></i>
+              <span class="nav-text">
+                Dashboard
+              </span>
+          </a>
+
+      </li>
+      <li class="has-subnav">
+          <a (click)="redirectTo('user/users-list')">
+            <i class="fa fa-users" aria-hidden="true"></i>
+             <span class="nav-text">
+                  List of Users
+              </span>
+          </a>
+
+      </li>
+      <li class="has-subnav">
+          <a (click)="redirectTo('/vehicle/vehicles-list')">
+            <i class="fa fa-th-list" aria-hidden="true"></i>
+            <span class="nav-text">
+                 List of Vehicles
+              </span>
+          </a>
+
+      </li>
+      <li >
+          <a (click)="redirectTo('/user/add-user')">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+              <span class="nav-text">
+                  Add user
+              </span>
+          </a>
+
+      </li>
+      <li>
+          <a (click)="redirectTo('/vehicle/add-vehicle')">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+              <span class="nav-text">
+                 Add Vehicle
+              </span>
+          </a>
+      </li>
+      <li>
+          <a (click)="redirectTo('/dashboard')">
+            <i class="fa fa-flag" aria-hidden="true"></i>
+              <span class="nav-text">
+                Reports
+              </span>
+          </a>
+      </li>
+      <li>
+         <a (click)="redirectTo('/dashboard')">
+             <i class="fa fa-cogs fa-2x"></i>
+              <span class="nav-text">
+                 Settings
+              </span>
+          </a>
+      </li>
+  </ul>
+
+  <ul class="logout">
+      <li>
+         <a (click)="redirectTo('/login')">
+               <i class="fa fa-power-off fa-2x"></i>
+              <span class="nav-text">
+                  Logout
+              </span>
+          </a>
+      </li>
   </ul>
 </nav>
- 

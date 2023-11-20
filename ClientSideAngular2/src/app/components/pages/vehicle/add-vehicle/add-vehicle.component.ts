@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl , FormGroup ,FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { SideBarComponent } from "../../../partials/side-bar/side-bar.component";
 
 @Component({
-  selector: 'app-add-vehicle',
-  standalone: true,
-  imports: [CommonModule,FormsModule, ReactiveFormsModule],
-  templateUrl: './add-vehicle.component.html',
-  styleUrl: './add-vehicle.component.css'
+    selector: 'app-add-vehicle',
+    standalone: true,
+    templateUrl: './add-vehicle.component.html',
+    styleUrl: './add-vehicle.component.css',
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, SideBarComponent]
 })
 export class AddVehicleComponent {
   route : ActivatedRoute = inject(ActivatedRoute) ;

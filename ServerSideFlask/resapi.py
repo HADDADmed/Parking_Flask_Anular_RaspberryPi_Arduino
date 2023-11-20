@@ -68,6 +68,13 @@ def index():
     return "Hello World"
 
 
+@app.route('/createDb', methods=['GET'])
+def createDb():
+    mydb.create_all()
+    return jsonify({"message": "Database created successfully"})
+
+
+
 # API and Routes
 # for Vehicle
 
