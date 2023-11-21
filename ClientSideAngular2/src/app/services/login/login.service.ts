@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {  Router } from '@angular/router';
+import { UserResponse } from '../../interfaces/UserResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -15,15 +16,20 @@ export class LoginService {
     console.log('2password: ' + password);
 
     return this.http
-      .post(`${this.apiUrl}login`, {
+      .post<UserResponse>(`${this.apiUrl}login`, {
         username: username,
         password: password,
       })
       .subscribe({
-        next: (data) => {
+        next: (data ) => {
           console.log(data);
-          // redirect to dashboard
+
+          if (data.isAdmin == true) {
             this.router.navigate(['/dashboard']);
+          }
+          else{
+            this.router.navigate(['/user-dashboard']);
+          }
         },
         error: (error) => {
           console.error('Error in login request:', error);

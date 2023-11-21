@@ -6,7 +6,7 @@ import { AddVehicleComponent } from './components/pages/vehicle/add-vehicle/add-
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 import { UsersListComponent } from './components/pages/user/users-list/users-list.component';
 import { VehiclesListComponent } from './components/pages/vehicle/vehicles-list/vehicles-list.component';
-
+import { UserDashboardComponent } from './components/pages/user-dashboard/user-dashboard.component';
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'login', component: LoginComponent },
@@ -14,6 +14,7 @@ export const routes: Routes = [
   { path: 'user/users-list', component: UsersListComponent },
   { path: 'vehicle/add-vehicle', component: AddVehicleComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'vehicle/vehicles-list', component: VehiclesListComponent }
+  { path: 'vehicle/vehicles-list', component: VehiclesListComponent },
+  { path: 'user-dashboard', component: UserDashboardComponent}
 
 ];

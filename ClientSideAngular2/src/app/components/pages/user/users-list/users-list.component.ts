@@ -15,32 +15,34 @@ import { User } from '../../../../models/User';
 export class UsersListComponent implements OnInit {
 
   users: User[] = [];
+  users2: any[] = [];
+
   constructor(private userService: UserService) {
 
 
   }
 
   ngOnInit() {
-    // Move the logic inside the subscribe block to ensure data is fetched before logging or using it
     this.userService.getAllUsers().subscribe(
-      data => {
-        this.users = data;
+      (data: any) => {
+        // Check if the returned data is an array or an object
+        if (Array.isArray(data)) {
+          this.users = data;
+        } else if (typeof data === 'object' && data !== null) {
+          // If it's an object, convert it to an array (assuming an array is present in the object structure)
+          this.users = Object.values(data);
+        }
 
         console.log("users 1");
         console.log(data);
 
-        // Build an iterable array
-
-         
-
-
+        this.users2 = data;
         console.log("users 2");
         console.log(this.users);
+      },
+      error => {
+        console.error('Error fetching users:', error);
       }
     );
-
-    // Logging here won't give the expected result as the request is asynchronous
-    // console.log("users 3");
-    // console.log(this.users);
   }
 }
