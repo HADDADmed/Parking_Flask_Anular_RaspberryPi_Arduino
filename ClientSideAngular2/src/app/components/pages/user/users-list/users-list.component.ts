@@ -24,25 +24,24 @@ export class UsersListComponent implements OnInit {
 
   ngOnInit() {
     this.userService.getAllUsers().subscribe(
-      (data: any) => {
-        // Check if the returned data is an array or an object
-        if (Array.isArray(data)) {
-          this.users = data;
-        } else if (typeof data === 'object' && data !== null) {
-          // If it's an object, convert it to an array (assuming an array is present in the object structure)
-          this.users = Object.values(data);
+      data => {
+        console.log('Received data:', data);
+
+        if (data && Array.isArray(data.users)) {
+          this.users = data.users;
+        } else {
+          console.error('Invalid data structure:', data);
         }
 
-        console.log("users 1");
-        console.log(data);
-
-        this.users2 = data;
-        console.log("users 2");
-        console.log(this.users);
+        // Other logic...
       },
       error => {
         console.error('Error fetching users:', error);
       }
     );
   }
+
+
+
+
 }

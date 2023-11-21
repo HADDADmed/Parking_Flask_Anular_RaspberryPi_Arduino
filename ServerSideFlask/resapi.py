@@ -95,6 +95,7 @@ class User(mydb.Model):
     name = mydb.Column(mydb.String(255))
     username = mydb.Column(mydb.String(255))
     password = mydb.Column(mydb.String(255))
+    phone = mydb.Column(mydb.Integer)
     age = mydb.Column(mydb.Integer)
     isAdmin = mydb.Column(mydb.Boolean)
     vehicles = mydb.relationship('Vehicle', backref='user')
@@ -105,6 +106,7 @@ class User(mydb.Model):
             'username': self.username,
             'age': self.age,
             'isAdmin': self.isAdmin,
+            'phone' :self.phone, 
             'vehicles': list(map(lambda vehicle: vehicle.serialize(), self.vehicles))
             # Add more fields as needed
         }
@@ -196,12 +198,13 @@ def get_users():
 def saveUser():
     args = request.json
     name = args.get('name')
+    phone = args.get('phone')
     username = args.get('username')
     password = args.get('password')
     age = args.get('age')
 
     # Créez une instance de la classe User
-    newUser = User(name=name, username=username, password=password, age=age)
+    newUser = User(name=name, username=username, password=password, age=age , phone=phone ,isAdmin=False )
 
     # Ajoutez le nouvel utilisateur à la base de données
     mydb.session.add(newUser)

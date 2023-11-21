@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl , FormGroup ,FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { SideBarComponent } from "../../../partials/side-bar/side-bar.component";
+import { VehicleService } from '../../../../services/vehicle/vehicle.service';
 
 @Component({
     selector: 'app-add-vehicle',
@@ -12,25 +13,24 @@ import { SideBarComponent } from "../../../partials/side-bar/side-bar.component"
     imports: [CommonModule, FormsModule, ReactiveFormsModule, SideBarComponent]
 })
 export class AddVehicleComponent {
-  route : ActivatedRoute = inject(ActivatedRoute) ;
+  route : ActivatedRoute = inject(ActivatedRoute) ; 
+  vehicleService : VehicleService = inject(VehicleService) ; 
 
   applyForm = new FormGroup({
     matricule : new FormControl('') ,
     model : new FormControl(''),
-    userId : new FormControl(0),
-    abonnement_id : new FormControl(0)
+    userId : new FormControl(),
+    abonnement_id : new FormControl()
   })
 
   saveVehicle() {
-    console.log("this.applyForm.value :") ;
-    console.log(this.applyForm.value) ;
 
-    // this.vehicleService.SaveVehicle(
-    //   this.applyForm.value.matricule ?? " ",
-    //   this.applyForm.value.model ?? " " ,
-    //   this.applyForm.value.userId ?? 0 ,
-    //   this.applyForm.value.abonnement_id ?? 0
-    //   );
-    //   this.applyForm.reset() ;
-   }
+    this.vehicleService.SaveVehicle(
+      this.applyForm.value.matricule ?? " ",
+      this.applyForm.value.model ?? " " ,
+      this.applyForm.value.userId ?? 0 ,
+      this.applyForm.value.abonnement_id ?? 0 
+      ); 
+      this.applyForm.reset() ; 
+  }
 }

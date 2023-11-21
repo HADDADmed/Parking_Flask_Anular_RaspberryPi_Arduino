@@ -5,7 +5,7 @@
 
 <div class="container">
   <h2>List of All Clients <span style="color: red;">  <small><strong> 500</strong></small> </span></h2>
-  <ul class="responsive-table">
+  <ul class="responsive-table" *ngIf="users && users.length">
     <li class="table-header">
       <div class="col col-1">#Id</div>
       <div class="col col-2">Client full Name</div>
@@ -13,7 +13,21 @@
       <div class="col col-4">Age</div>
       <div class="col col-5">Vehicles </div>
     </li>
-    
+    <li class="table-row" *ngFor='let user of users '>
+      <div class="col col-1" data-label="Job Id">{{user.id}}</div>
+      <div class="col col-2" data-label="Customer Name">{{user.name}}</div>
+      <div class="col col-3" data-label="Amount">{{user.phone}}</div>
+      <div class="col col-4" data-label="Payment Status">
+        {{user.age}}
+
+      </div>
+       <div class="col col-5" data-label="Payment Status" style="margin-top: -8px;">
+       <button class="btn btn-primary rounded rounded-circle">
+          <strong>{{user.vehicles.length}}</strong>
+       </button>
+
+      </div>
+    </li>
 
   </ul>
 </div>
