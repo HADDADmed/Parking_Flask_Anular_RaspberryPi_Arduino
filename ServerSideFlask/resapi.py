@@ -20,13 +20,24 @@ mydb = SQLAlchemy(app)
 
 class StatussVehicule(mydb.Model):
     __tablename__ = 'stat_vehic'
-    id = mydb.Column(mydb.Integer, primary_key=True) 
+    id = mydb.Column(mydb.Integer, primary_key=True, autoincrement=True) 
     id_vehicule = mydb.Column('id_vehicule', mydb.Integer, mydb.ForeignKey('vehicle.id'), primary_key=True)
     id_status = mydb.Column('id_status', mydb.Integer, mydb.ForeignKey('statuss.id'), primary_key=True)
     date = mydb.Column('date', mydb.DateTime)
     time = mydb.Column('time',mydb.Integer)
     vehicle = mydb.relationship('Vehicle', back_populates='status')
     status = mydb.relationship('Statuss', back_populates='vehicles')
+    def serialize(self):
+        return {
+            'id': self.id,
+            'status_type': self.status.type,
+            'date': self.date,
+            'time_left_in_hours': self.time,
+            
+            # Add more fields as needed
+        }
+    
+    
 class Vehicle(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
     matricule = mydb.Column(mydb.String(255))
@@ -34,18 +45,50 @@ class Vehicle(mydb.Model):
     sub_id = mydb.Column(mydb.Integer, mydb.ForeignKey('subscription.id'))
     user_id = mydb.Column(mydb.Integer, mydb.ForeignKey('user.id'))
     status = mydb.relationship('StatussVehicule' , back_populates='vehicle')
+    def serialize(self):
+        return {
+            'id': self.id,
+            'matricule': self.matricule,
+            'model': self.model,
+            'user_id': self.user_id,
+            'subscription': self.subscription.serialize2(),
+            'statuses': list(map(lambda status: status.serialize(), self.status))
+        }
+    
     
     
 class Statuss(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
     type = mydb.Column(mydb.String(255))
     vehicles = mydb.relationship('StatussVehicule' ,back_populates='status')  # Correction ici
+    def serialize(self):
+        return {
+            'id': self.id,
+            'type': self.type,
+            # Add more fields as needed
+        }
+    
 
 class Subscription(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
     type = mydb.Column(mydb.String(255))
     description = mydb.Column(mydb.String(255))
     vehicles = mydb.relationship('Vehicle', backref='subscription')
+    def serialize(self):
+        return {
+            'id': self.id,
+            'type': self.type,
+            'description': self.description,
+            'vehicles': list(map(lambda vehicle: vehicle.serialize(), self.vehicles))
+            # Add more fields as needed
+        }
+    def serialize2(self):
+        return {
+            'id': self.id,
+            'type': self.type,
+            'description': self.description,
+            # Add more fields as needed
+        }
 
 class User(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
@@ -55,6 +98,16 @@ class User(mydb.Model):
     age = mydb.Column(mydb.Integer)
     isAdmin = mydb.Column(mydb.Boolean)
     vehicles = mydb.relationship('Vehicle', backref='user')
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'username': self.username,
+            'age': self.age,
+            'isAdmin': self.isAdmin,
+            'vehicles': list(map(lambda vehicle: vehicle.serialize(), self.vehicles))
+            # Add more fields as needed
+        }
 
 
 @app.route('/')
@@ -68,6 +121,12 @@ def createDb():
     mydb.create_all()
     return jsonify({"message": "Database created successfully"})
 
+
+
+@app.route('/updateDataBase', methods=['GET'])
+def updateDataBase():
+    mydb.create_all()
+    return jsonify({"message": "Database updated successfully"})
 
 
 # API and Routes
@@ -127,6 +186,7 @@ def saveSubscription():
 @app.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
+    # serialize the list of users from a list of User objects to a list of dictionaries
     users = list(map(lambda user: user.serialize(), users))
     return jsonify({"users": users})
 
@@ -161,17 +221,17 @@ def assign_status_to_vehicle():
         status_id = data.get('status_id')
 
         # Vérifier si le véhicule et le statut existent dans la base de données
-        my_vehicle = Vehicle.query.get(vehicle_id)
-        my_status = Statuss.query.get(status_id)
+        my_vehicle = mydb.session.get(Vehicle, vehicle_id )
+        my_status = mydb.session.get(Statuss, status_id )
 
-        subscription = Subscription.query.get(my_vehicle.sub_id)
+        subscription =  my_vehicle.subscription
 
         if my_vehicle and my_status and subscription :
             # Créer un objet StatussVehicule avec la date actuelle
             assignment_date = datetime.now().date()
-            if subscription.type == 'basic' : 
+            if subscription.type == 'basic' or subscription.type == 'BASIC' or subscription.type == 'Basic' : 
                 status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 24)
-            elif subscription.type == 'moyen' :
+            elif subscription.type == 'moyen' or subscription.type == 'MOYEN' or subscription.type == 'Moyen' :
                 status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 48)
             else :
                 status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 86)
