@@ -10,41 +10,26 @@
       <div class="">
         <form  [formGroup]="addUserForm" (submit)="saveUser()">
           <div class="input_field"> <span><i aria-hidden="true" class="fa fa-envelope"></i></span>
-            <input type="email" name="email" placeholder="Email"  formControlName="email"  required />
+            <input type="text" name="name" placeholder="Name"  formControlName="name"  required />
+          </div>
+          <div class="input_field"> <span><i aria-hidden="true" class="fa fa-envelope"></i></span>
+            <input type="text" name="username" placeholder="Username"  formControlName="username"  required />
           </div>
           <div class="input_field"> <span><i aria-hidden="true" class="fa fa-lock"></i></span>
             <input type="password" name="password" placeholder="Password" formControlName="password" required />
           </div>
-          <div class="input_field"> <span><i aria-hidden="true" class="fa fa-lock"></i></span>
-            <input type="password" name="password" placeholder="Re-type Password"  formControlName="password_confirmation" required />
-          </div>
           <div class="row clearfix">
             <div class="col_half">
               <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-                <input type="text" name="name"  formControlName="firstName" placeholder="First Name" />
+                <input type="text" name="name"  formControlName="phone" placeholder="Phone number" />
               </div>
             </div>
             <div class="col_half">
               <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-                <input type="text" name="name"  formControlName="lastName" placeholder="Last Name" required />
+                <input type="text" name="age"  formControlName="age" placeholder="Age" required />
               </div>
             </div>
           </div>
-            	<div class="input_field radio_option">
-              <input type="radio"   formControlName="genderM"  name="genderM" id="rd1" value="femal">
-              <label for="rd1">Male</label>
-              <input type="radio" name="genderF" formControlName="genderF" id="rd2" value="male">
-              <label for="rd2">Female</label>
-              </div>
-              <div class="input_field select_option">
-                <select>
-                  <option>Select a country</option>
-                  <option>Option 1</option>
-                  <option>Option 2</option>
-                </select>
-                <div class="select_arrow"></div>
-              </div>
-
           <input class="button" type="submit" value="Register" />
 
         </form>

@@ -8,7 +8,8 @@ import { Observable } from 'rxjs';
 export class UserService {
 
 
-   apiUrl = 'http://127.0.0.1:5000/users';
+   apiUrl = 'http://127.0.0.1:5000/';
+
   constructor(
     private http: HttpClient
   ) { }
@@ -16,6 +17,9 @@ export class UserService {
 
    getAllUsers() : Observable<{ users: User[] }> 
     {
-      return this.http.get<{ users: User[] }>(this.apiUrl);
+      return this.http.get<{ users: User[] }>(this.apiUrl+"users");
+}
+saveUser(userData: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}/saveUser`, userData);
 }
 }

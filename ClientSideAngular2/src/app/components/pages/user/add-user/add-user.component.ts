@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SideBarComponent } from "../../../partials/side-bar/side-bar.component";
+import { UserService } from '../../../../services/user/user.service';
 
 @Component({
     selector: 'app-add-user',
@@ -13,20 +14,31 @@ import { SideBarComponent } from "../../../partials/side-bar/side-bar.component"
 export class AddUserComponent {
 
   addUserForm = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    email: new FormControl(''),
+    name: new FormControl(''),
+    username: new FormControl(''),
     password: new FormControl(''),
-    password_confirmation: new FormControl(''),
-    genderM: new FormControl(''),
-    genderF: new FormControl(''),
     age: new FormControl(''),
+    phone: new FormControl(''),
   })
 
+constructor(private userService: UserService) {}
 
-    saveUser() {
-      console.log("this.addUserForm.value :") ;
-      console.log(this.addUserForm.value) ;
-    }
+  saveUser() {
+    this.userService.saveUser({
+      name: this.addUserForm.value.name ?? '',
+      username: this.addUserForm.value.username ?? '',
+      password: this.addUserForm.value.password ?? '',
+      age: this.addUserForm.value.age ?? '',
+      phone: this.addUserForm.value.phone ?? ''
+    }).subscribe(
+      response => {
+        console.log(response); // Handle the response if needed
+        this.addUserForm.reset();
+      },
+      error => {
+        console.error('Error saving user:', error);
+      }
+    );
+  }
 
 }

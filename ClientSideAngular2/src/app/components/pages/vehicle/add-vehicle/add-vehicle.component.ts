@@ -19,8 +19,8 @@ export class AddVehicleComponent {
   applyForm = new FormGroup({
     matricule : new FormControl('') ,
     model : new FormControl(''),
-    userId : new FormControl(0),
-    abonnement_id : new FormControl(0)
+    userId : new FormControl(),
+    abonnement_id : new FormControl()
   })
 
   saveVehicle() {
