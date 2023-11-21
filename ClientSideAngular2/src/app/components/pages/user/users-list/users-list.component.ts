@@ -21,26 +21,25 @@ export class UsersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Move the logic inside the subscribe block to ensure data is fetched before logging or using it
     this.userService.getAllUsers().subscribe(
       data => {
-        this.users = data;
-
-        console.log("users 1");
-        console.log(data);
-
-        // Build an iterable array
-
-         
-
-
-        console.log("users 2");
-        console.log(this.users);
+        console.log('Received data:', data);
+  
+        if (data && Array.isArray(data.users)) {
+          this.users = data.users;
+        } else {
+          console.error('Invalid data structure:', data);
+        }
+  
+        // Other logic...
+      },
+      error => {
+        console.error('Error fetching users:', error);
       }
     );
-
-    // Logging here won't give the expected result as the request is asynchronous
-    // console.log("users 3");
-    // console.log(this.users);
   }
+  
+  
+  
+  
 }

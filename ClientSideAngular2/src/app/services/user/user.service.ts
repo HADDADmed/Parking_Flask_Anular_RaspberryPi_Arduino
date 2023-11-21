@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../models/User';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,9 +14,8 @@ export class UserService {
   ) { }
 
 
-   getAllUsers() {
-    return this.http.get<User[]>(this.apiUrl);
-
-
+   getAllUsers() : Observable<{ users: User[] }> 
+    {
+      return this.http.get<{ users: User[] }>(this.apiUrl);
 }
 }

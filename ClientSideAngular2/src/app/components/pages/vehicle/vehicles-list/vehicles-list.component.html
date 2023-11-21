@@ -7,22 +7,20 @@
   <ul class="responsive-table">
     <li class="table-header">
       <div class="col col-1">#Id</div>
-      <div class="col col-2">Client full Name</div>
-      <div class="col col-3">Plate</div>
-      <div class="col col-4">Subscription</div>
-      <div class="col col-5">History</div>
+      <div class="col col-2">ID de l'utilisateur</div>
+      <div class="col col-3">Matrecule</div>
+      <div class="col col-4">Model</div>
+      <div class="col col-5">Subscription</div>
     </li>
-    <li class="table-row">
-      <div class="col col-1" data-label="Job Id">42235</div>
-      <div class="col col-2" data-label="Customer Name">HADDAD MOHAMMED</div>
-      <div class="col col-3" data-label="Amount">Q404240</div>
-      <div class="col col-4" data-label="Payment Status">
-        Basic
-
+    <li class="table-row" *ngFor="let vehicle of vehicles" >
+      <div class="col col-1" data-label="Job Id">{{vehicle.id}}</div>
+      <div class="col col-2" data-label="Customer Name">{{vehicle.user_id}}</div>
+      <div class="col col-3" data-label="Amount">{{vehicle.matricule}}</div>
+      <div class="col col-4" data-label="Payment Status">{{vehicle.model}}
       </div>
        <div class="col col-5" data-label="Payment Status" style="margin-top: -8px;">
        <button class="btn btn-primary rounded rounded-circle">
-          <strong>H</strong>
+          <strong>{{vehicle.subscription.type}}</strong>
        </button>
 
       </div>
