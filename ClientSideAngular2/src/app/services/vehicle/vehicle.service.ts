@@ -25,10 +25,22 @@ export class VehicleService {
       }, (error) => {
         console.error(error);
       });
-     
+
   }
 
   getAllVehicles(): Observable<{ vehicles: Vehicle[] }> {
     return this.http.get<{ vehicles: Vehicle[] }>(this.url + '/vehicles');
   }
+
+  getVehiculeById(id: number): Observable<{ vehicle: Vehicle }> {
+
+    return this.http.get<{ vehicle: Vehicle }>(this.url + '/vehicle/' + id);
+
+  }
+  getVehiclesByUserId(id: number): Observable<{ vehicles: Vehicle[] }> {
+
+      return this.http.get<{ vehicles: Vehicle[] }>(this.url + '/getVehiclesByUserId/' + id);
+
+    }
+
 }

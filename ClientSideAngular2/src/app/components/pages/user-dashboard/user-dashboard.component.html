@@ -1,1 +1,64 @@
-<p>user-dashboard works!</p>
+<app-side-bar></app-side-bar>
+
+
+<div class="margo" *ngFor="let vehicle of vehicles">
+
+   <div >
+     <!--Vehicle card -->
+     <div class="d-flex justify-content-around">
+
+
+      <div class="card" style="max-width: 40rem; margin:0px 0px 40px 0px; ">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <!-- image of an old car -->
+                <img src="https://www.automobile-magazine.fr/asset/cms/840x394/177505/config/106686/peugeot-308-2021-essai-avis-technique.jpg" class="card-img" alt="...">
+            </div>
+            <div class="col-md-6">
+                <div class="card-body d-flex flex-column justify-content-between h-100">
+                    <div>
+                        <h5 class="card-title">{{vehicle.name}}</h5>
+                        <p class="card-text">Matricule: {{vehicle.matricule}}</p>
+                        <p class="card-text">Model: {{vehicle.model}}</p>
+                        <p class="card-text">Abonnement: {{vehicle.subscription.type}}</p>
+                        <p class="card-text">Utilisateur: {{vehicle.user_id}}</p>
+                    </div>
+                    <div>
+                        <p class="mb-0">Time Left: 25 h</p>
+                        <a href="#" class="btn btn-primary rounded rounded-pill mt-3">Download Report</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+        </div>
+
+     </div>
+
+
+
+   <div >
+    <!--table of statuses (in , out)-->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#id </th>
+          <th scope="col">Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Time Left in Hours</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let status of vehicle.statuses">
+          <th scope="row">{{status.id}}</th>
+          <td>{{status.date}}</td>
+          <td>{{status.status_type}}</td>
+          <td>{{status.time_left_in_hours}}</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+</div>

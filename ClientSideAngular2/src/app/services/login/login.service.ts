@@ -23,12 +23,18 @@ export class LoginService {
       .subscribe({
         next: (data ) => {
           console.log(data);
-
-          if (data.isAdmin == true) {
-            this.router.navigate(['/dashboard']);
+          if(data.status == 200){
+            localStorage.setItem('user', JSON.stringify(data.user));
+            console.log(data.user);
+            if (data.isAdmin == true) {
+              this.router.navigate(['/dashboard']);
+            }
+            else{
+              this.router.navigate(['/user-dashboard']);
+            }
           }
           else{
-            this.router.navigate(['/user-dashboard']);
+            alert(data.message);
           }
         },
         error: (error) => {

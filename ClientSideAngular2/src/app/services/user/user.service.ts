@@ -15,11 +15,15 @@ export class UserService {
   ) { }
 
 
-   getAllUsers() : Observable<{ users: User[] }> 
+   getAllUsers() : Observable<{ users: User[] }>
     {
       return this.http.get<{ users: User[] }>(this.apiUrl+"users");
 }
 saveUser(userData: any): Observable<any> {
   return this.http.post(`${this.apiUrl}/saveUser`, userData);
+}
+
+getUserFromLocalStorage () : User {
+  return JSON.parse(localStorage.getItem('user') ?? '{}') ;
 }
 }

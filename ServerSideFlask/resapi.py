@@ -142,8 +142,30 @@ def login():
     password = args.get('password')
     print(username)
     print(password)
-    return jsonify({"message": "login successfully"})
+    
+    user = User.query.filter_by(username=username).first()
+    
+    print(user)
+    if user:
+        # check if the password is correct
+        if user.password == password:
+            # check if the user is admin
+            if user.isAdmin:
+                return jsonify({"status":200 , "message": "login successfully", "isAdmin": True,"user": user.serialize()})
+            else:
+                return jsonify({"status":200 , "message": "login successfully", "isAdmin": False,"user": user.serialize()})
+        else:
+            return jsonify({"status":400 , "message": "password is incorrect"})
+    else:
+        return jsonify({"status":400 , "message": "username is incorrect"})
 
+
+# get vehicles by user id get Method
+@app.route('/getVehiclesByUserId/<int:id>', methods=['GET'])
+def getVehiclesByUserId(id):
+    vehicles = Vehicle.query.filter_by(user_id=id).all()
+    vehicles = list(map(lambda vehicle: vehicle.serialize(), vehicles))
+    return jsonify({"vehicles": vehicles})
 
 
 @app.route('/vehicles', methods=['GET'])

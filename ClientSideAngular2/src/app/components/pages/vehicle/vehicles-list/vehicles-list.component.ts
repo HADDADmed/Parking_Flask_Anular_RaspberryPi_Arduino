@@ -14,20 +14,19 @@ import { VehicleService } from '../../../../services/vehicle/vehicle.service';
 export class VehiclesListComponent {
 
     vehicles: Vehicle[] = [];
-
     constructor(private vehicleService: VehicleService) { }
-  
+
     ngOnInit() {
       this.vehicleService.getAllVehicles().subscribe(
         data => {
           console.log('Received vehicle data:', data);
-  
+
           if (data && Array.isArray(data.vehicles)) {
             this.vehicles = data.vehicles;
           } else {
             console.error('Invalid vehicle data structure:', data);
           }
-  
+
           // Other logic...
         },
         error => {
