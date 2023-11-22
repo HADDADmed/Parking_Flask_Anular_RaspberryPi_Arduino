@@ -250,20 +250,39 @@ def assign_status_to_vehicle():
         my_status = mydb.session.get(Statuss, status_id )
 
         subscription =  my_vehicle.subscription
+        # Assuming assignment_date is a datetime.date object
+        assignment_date = datetime.now().date()
+        
 
-        if my_vehicle and my_status and subscription :
+        # Calculate the time difference in hours
+        if my_vehicle  and subscription :
             # Créer un objet StatussVehicule avec la date actuelle
             assignment_date = datetime.now().date()
-            if subscription.type == 'basic' or subscription.type == 'BASIC' or subscription.type == 'Basic' : 
-                status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 24)
-            elif subscription.type == 'moyen' or subscription.type == 'MOYEN' or subscription.type == 'Moyen' :
-                status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 48)
-            else :
-                status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 86)
-           
-            # Ajouter l'objet StatussVehicule à la liste de "status" du véhicule
-            my_vehicle.status.append(status_vehicle)
+            # fetch for te last status of the vehicle if it's not the first time
+            last_status = StatussVehicule.query.filter_by(id_vehicule=vehicle_id).order_by(StatussVehicule.date.desc()).first()
+            if last_status:
+                # check if the last status to asign the opposite status
+                if last_status.id_status == 1:
+                    id_statuss = 2
+                else:
+                    id_statuss = 1
+                
+                new_time = last_status.time - 1 if id_statuss == 2 else last_status.time
+                new_status = StatussVehicule(id_vehicule=vehicle_id, id_status=id_statuss, date=assignment_date, time=new_time)
+                # add the new status to the database
+                mydb.session.add(new_status)
+                # save the changes
+            else : 
+                # asign the new status to the vehicle for the first time and asigm the time left by comparing the subscription duration 
+                 if subscription.type == 'basic' or subscription.type == 'BASIC' or subscription.type == 'Basic' : 
+                     status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 24)
+                 elif subscription.type == 'moyen' or subscription.type == 'MOYEN' or subscription.type == 'Moyen' :
+                     status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 48)
+                 else :
+                     status_vehicle = StatussVehicule(id_vehicule=my_vehicle.id, id_status=my_status.id, date=assignment_date , time= 86)
+                 my_vehicle.status.append(status_vehicle)
 
+            # Ajouter l'objet StatussVehicule à la liste de "status" du véhicule
             # Enregistrer les modifications dans la base de données
             mydb.session.commit()
 
