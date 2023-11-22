@@ -205,7 +205,7 @@ def saveSubscription():
 
     return jsonify({"message": "Subscription saved successfully", "id": newSubscription.id})
     
-    
+   
    
 @app.route('/users', methods=['GET'])
 def get_users():
