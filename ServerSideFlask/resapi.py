@@ -291,7 +291,15 @@ def assign_status_to_vehicle():
             return jsonify({"message": "Véhicule ou statut introuvable"})
     except Exception as e:
         return jsonify({"error": str(e)})
-      
+
+
+
+def ConnectionAR(matrecule):
+    my_vehicle = mydb.session.get(Vehicle, matrecule )
+    if my_vehicle :
+        print("Voiture dans le parking ")
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="5000", debug=True)
+    
