@@ -252,14 +252,14 @@ def assign_status_to_vehicle():
         subscription =  my_vehicle.subscription
         # Assuming assignment_date is a datetime.date object
         assignment_date = datetime.now().date()
-        
-
         # Calculate the time difference in hours
         if my_vehicle  and subscription :
             # Créer un objet StatussVehicule avec la date actuelle
             assignment_date = datetime.now().date()
             # fetch for te last status of the vehicle if it's not the first time
             last_status = StatussVehicule.query.filter_by(id_vehicule=vehicle_id).order_by(StatussVehicule.date.desc()).first()
+            print("last_status")
+            print(last_status)
             if last_status:
                 # check if the last status to asign the opposite status
                 if last_status.id_status == 1:
@@ -292,6 +292,60 @@ def assign_status_to_vehicle():
     except Exception as e:
         return jsonify({"error": str(e)})
       
+      
+# handling the arduino request
+@app.route('/checkAutorizationVehicle', methods=['POST'])
+def checkAutorizationVehicle():
+    args = request.json
+    rfId = args.get('rfId')
+    # check if the vehicle exist in the database and the subscription is not null or expired or empty
+    vehicle = Vehicle.query.filter_by(matricule=rfId).first()
+    if vehicle and vehicle.subscription :
+        # check if the last status is 1 or 2 
+        last_status = StatussVehicule.query.filter_by(id_vehicule=vehicle.id).order_by(StatussVehicule.date.desc()).first()
+        if last_status:
+            if last_status.id_status == 1:
+                return jsonify({"status":200 , "message": "Autorized"})
+            else:
+                return jsonify({"status":400 , "message": "Not Autorized"})
+        else:
+            return jsonify({"status":400 , "message": "Not Autorized"})
+    else:
+        return jsonify({"status":400 , "message": "Not Autorized"})
+
+
+@app.route('/checkAutorizationVehicleAndAsigneStatus', methods=['POST'])
+def checkAutorizationVehicleAndAsigneStatus():
+    args = request.json
+    rfId = args.get('rfId')
+    vehicle_id = args.get('vehicle_id')
+
+    # check if the vehicle exist in the database and the subscription is not null or expired or empty
+    vehicle = Vehicle.query.filter_by(id=vehicle_id).first()
+    if vehicle and vehicle.subscription :
+        # check if the last status is 1 or 2 
+        last_status = StatussVehicule.query.filter_by(id_vehicule=vehicle.id).order_by(StatussVehicule.date.desc()).first()
+        if last_status:
+            if last_status.id_status == 1:
+                # asign the new status to the vehicle for the first time and asigm the time left by comparing the subscription duration 
+                if vehicle.subscription.type == 'basic' or vehicle.subscription.type == 'BASIC' or vehicle.subscription.type == 'Basic' : 
+                    status_vehicle = StatussVehicule(id_vehicule=vehicle.id, id_status=2, date=datetime.now().date() , time= 24)
+                elif vehicle.subscription.type == 'moyen' or vehicle.subscription.type == 'MOYEN' or vehicle.subscription.type == 'Moyen' :
+                    status_vehicle = StatussVehicule(id_vehicule=vehicle.id, id_status=2, date=datetime.now().date() , time= 48)
+                else :
+                    status_vehicle = StatussVehicule(id_vehicule=vehicle.id, id_status=2, date=datetime.now().date() , time= 86)
+                vehicle.status.append(status_vehicle)
+                mydb.session.commit()
+                return jsonify({"status":200 , "message": "Autorized and status asigned"})
+            else:
+                return jsonify({"status":400 , "message": "Not Autorized and status not asigned"})
+        else:
+            return jsonify({"status":400 , "message": "Not Autorized and status not asigned"})
+    else:
+        return jsonify({"status":400 , "message": "Not Autorized and status not asigned"})
+
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="5000", debug=True)
