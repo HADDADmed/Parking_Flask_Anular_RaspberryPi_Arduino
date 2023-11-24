@@ -1,4 +1,5 @@
-import { User } from './../../../../ClientSideAngular/src/shared/models/User';
+import { User } from "../models/User";
+
 export interface UserResponse {
   status: number;
   message: string;
