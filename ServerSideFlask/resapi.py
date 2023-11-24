@@ -205,7 +205,7 @@ def saveSubscription():
 
     return jsonify({"message": "Subscription saved successfully", "id": newSubscription.id})
     
-    
+   
    
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -347,5 +347,13 @@ def checkAutorizationVehicleAndAsigneStatus():
 
 
 
+
+def ConnectionAR(matrecule):
+    my_vehicle = mydb.session.get(Vehicle, matrecule )
+    if my_vehicle :
+        print("Voiture dans le parking ")
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="5000", debug=True)
+    
