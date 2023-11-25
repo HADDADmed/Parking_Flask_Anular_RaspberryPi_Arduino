@@ -4,6 +4,7 @@ import pytesseract
 from PIL import Image
 import os
 import time 
+import serial
 host = "localhost"
 user = "root"
 password = ""
@@ -15,6 +16,24 @@ connexion = mysql.connector.connect(
     password=password,
     database=database
 )
+def OpenServoM(arduino_port , angle) :
+     ser = serial.Serial(arduino_port, 9600)
+     time.sleep(2)  # Attendez que la connexion soit établie
+
+    # Envoie l'angle au servomoteur
+     ser.write(str(angle).encode())
+     print(f"Servomoteur ouvert à l'angle : {angle}")
+
+def CloseServoM(arduino_port , angle):
+     ser = serial.Serial(arduino_port, 9600)
+     time.sleep(2)  # Attendez que la connexion soit établie
+
+    # Envoie l'angle au servomoteur
+     ser.write(str(angle).encode())
+     print(f"Servomoteur ouvert à l'angle : {angle}")
+    # Ferme le port série
+     ser.close()
+     
 curseur = connexion.cursor()
 camera = cv2.VideoCapture(0)
 while True:
@@ -60,6 +79,7 @@ while True:
                                         status_id = 2
                                         parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), time1)
                                         curseur.execute(requete_insert_status, parametres_insert_status)
+                                        OpenServoM('COM3', 90)
                                         connexion.commit()
                                         break
                                     else:
@@ -68,9 +88,9 @@ while True:
                                         status_id = 1 
                                         parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), time2)
                                         curseur.execute(requete_insert_status, parametres_insert_status)
+                                        OpenServoM('COM3', 90)
                                         connexion.commit()
                                         break
-
                             else :
                                   print("Abonnement expirer")
                                   sub_id = resultat[0][3]
@@ -86,12 +106,16 @@ while True:
                                             status_id = 1
                                             parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), 24)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
+                                            OpenServoM('COM3', 90)
                                             connexion.commit()
                                         elif type_abonnement == "moyen":
                                             requete_insert_status = "INSERT INTO stat_vehic (id_vehicule, id_status , date ,time ) VALUES (%s, %s , %s , %s )"
                                             status_id = 1 
                                             parametres_insert_status = (id_vehicle, status_id ,datetime.now().date() , 48)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
+                                            OpenServoM('COM3', 90)
+                                            time.sleep(10)
+                                            CloseServoM('C0M3',0)
                                             connexion.commit()
                                             break
                                             
@@ -100,13 +124,16 @@ while True:
                                             status_id = 1
                                             parametres_insert_status = (id_vehicle, status_id ,datetime.now().date() , 86)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
+                                            OpenServoM('COM3', 90)
+                                            time.sleep(10)
+                                            CloseServoM('C0M3',0)
                                             connexion.commit()
                                             break
                                     
                                 
                     else :
                          print("voiture non trouver")
-                         
-                   
+                                          
 curseur.close()
 connexion.close()
+     
