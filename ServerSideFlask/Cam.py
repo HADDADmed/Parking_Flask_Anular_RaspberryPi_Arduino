@@ -23,6 +23,8 @@ def OpenServoM(arduino_port , angle) :
     # Envoie l'angle au servomoteur
      ser.write(str(angle).encode())
      print(f"Servomoteur ouvert à l'angle : {angle}")
+     
+     ser.close()
 
 def CloseServoM(arduino_port , angle):
      ser = serial.Serial(arduino_port, 9600)
@@ -43,7 +45,7 @@ while True:
         if image is not None:
             cv2.imshow('Text detection', image)
 
-            path = r'/usr/bin/tesseract'
+            path = r'C:\Program Files\Tesseract-OCR'
             img = Image.fromarray(image)
             pytesseract.tesseract_cmd = path
             text = pytesseract.image_to_string(img)
@@ -79,7 +81,7 @@ while True:
                                         status_id = 2
                                         parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), time1)
                                         curseur.execute(requete_insert_status, parametres_insert_status)
-                                        OpenServoM('COM3', 90)
+                                        OpenServoM('COM10', 90)
                                         connexion.commit()
                                         break
                                     else:
@@ -88,7 +90,7 @@ while True:
                                         status_id = 1 
                                         parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), time2)
                                         curseur.execute(requete_insert_status, parametres_insert_status)
-                                        OpenServoM('COM3', 90)
+                                        OpenServoM('COM10', 90)
                                         connexion.commit()
                                         break
                             else :
@@ -106,14 +108,14 @@ while True:
                                             status_id = 1
                                             parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), 24)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
-                                            OpenServoM('COM3', 90)
+                                            OpenServoM('COM10', 90)
                                             connexion.commit()
                                         elif type_abonnement == "moyen":
                                             requete_insert_status = "INSERT INTO stat_vehic (id_vehicule, id_status , date ,time ) VALUES (%s, %s , %s , %s )"
                                             status_id = 1 
                                             parametres_insert_status = (id_vehicle, status_id ,datetime.now().date() , 48)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
-                                            OpenServoM('COM3', 90)
+                                            OpenServoM('COM10', 90)
                                             time.sleep(10)
                                             CloseServoM('C0M3',0)
                                             connexion.commit()
@@ -124,7 +126,7 @@ while True:
                                             status_id = 1
                                             parametres_insert_status = (id_vehicle, status_id ,datetime.now().date() , 86)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
-                                            OpenServoM('COM3', 90)
+                                            OpenServoM('COM10', 90)
                                             time.sleep(10)
                                             CloseServoM('C0M3',0)
                                             connexion.commit()
