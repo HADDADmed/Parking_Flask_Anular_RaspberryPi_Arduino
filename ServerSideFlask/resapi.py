@@ -1,5 +1,4 @@
 # import crypt
-import serial
 from hashlib import scrypt
 from flask import Flask, request, jsonify , Response
 import json
@@ -7,22 +6,15 @@ from flask_cors import CORS
 from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy 
 from datetime import datetime
-import cv2
-import pytesseract
 import time
 
 app = Flask(__name__)
 CORS(app)
 
-lcd_serial = serial.Serial('/dev/ttyUSB1', 9600)
-arduino_serial = serial.Serial('/dev/ttyUSB0', 9600) 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1:3306/parking'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 mydb = SQLAlchemy(app)
-
 # Model 
-
 class StatussVehicule(mydb.Model):
     __tablename__ = 'stat_vehic'
     id = mydb.Column(mydb.Integer, primary_key=True, autoincrement=True) 
@@ -41,7 +33,6 @@ class StatussVehicule(mydb.Model):
             
             # Add more fields as needed
         }
-    
     
 class Vehicle(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
@@ -348,69 +339,6 @@ def checkAutorizationVehicleAndAsigneStatus():
             return jsonify({"status":400 , "message": "Not Autorized and status not asigned"})
     else:
         return jsonify({"status":400 , "message": "Not Autorized and status not asigned"})
-
-
-
-
-
-def ConnectionAR(matricule):
-    with app.app_context():
-        my_vehicle = Vehicle.query.get(matricule)
-        if my_vehicle:
-            print("Voiture dans le parking ")
-            # Send request to Arduino to open the barrier
-            arduino_serial.write(b'OPEN_BARRIER\n')
-        else:
-            print("Voiture non trouvée dans le parking ")
-            # Send request to LCD to display a message
-            lcd_serial.write(b'ShowMessage:Car not found in database\n')
-
-pytesseract.pytesseract.tesseract_cmd = pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
-
-def text_detection(frame):
-    # Convert the frame to grayscale
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    # Apply thresholding to preprocess the image
-    _, thresh = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY_INV)
-
-    # Use pytesseract to perform OCR on the preprocessed image
-    text = pytesseract.image_to_string(thresh, config='--psm 11')
-
-    return text
-
-def video_stream():
-    vs = cv2.VideoCapture(0)
-
-    while True:
-        ret, frame = vs.read()
-
-        # Check if the frame is successfully read
-        if not ret:
-            print("Error reading frame from camera.")
-            break
-
-        # Detect text in the frame
-        detected_text = text_detection(frame)
-
-        # If text is detected, print it in the console
-        if detected_text.strip():
-            ConnectionAR(detected_text)
-            break
-
-        _, jpeg = cv2.imencode('.jpg', frame)
-
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
-
-    # Release the VideoCapture and destroy all OpenCV windows
-    vs.release()
-    cv2.destroyAllWindows()
-
-@app.route("/ws")
-def video_feed():
-    return Response(video_stream(),
-                    mimetype='multipart/x-mixed-replace;boundary=frame')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="5000", debug=True)
