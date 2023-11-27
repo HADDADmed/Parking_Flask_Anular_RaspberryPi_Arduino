@@ -16,15 +16,13 @@ connexion = mysql.connector.connect(
     password=password,
     database=database
 )
-def OpenServoM(arduino_port , angle) :
+def OpenServoM(arduino_port , variable) :
      ser = serial.Serial(arduino_port, 9600)
      time.sleep(2)  # Attendez que la connexion soit établie
 
     # Envoie l'angle au servomoteur
-     ser.write(str(angle).encode())
-     print(f"Servomoteur ouvert à l'angle : {angle}")
-     
-     ser.close()
+     ser.write(str(variable).encode())
+     print(f"Servomoteur ouvert à l'angle : {variable}")
 
 def CloseServoM(arduino_port , angle):
      ser = serial.Serial(arduino_port, 9600)
@@ -49,7 +47,7 @@ while True:
             img = Image.fromarray(image)
             pytesseract.tesseract_cmd = path
             text = pytesseract.image_to_string(img)
-            Matricule = text.replace(" ", "")  # Remove spaces from Matricule
+            Matricule = text.replace("","")  # Remove spaces from Matricule
             if(Matricule != ""):
                 print(f"Matricule: {Matricule}")
 
@@ -81,7 +79,7 @@ while True:
                                         status_id = 2
                                         parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), time1)
                                         curseur.execute(requete_insert_status, parametres_insert_status)
-                                        OpenServoM('COM10', 90)
+                                        OpenServoM('COM10', 1)
                                         connexion.commit()
                                         break
                                     else:
@@ -90,11 +88,13 @@ while True:
                                         status_id = 1 
                                         parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), time2)
                                         curseur.execute(requete_insert_status, parametres_insert_status)
-                                        OpenServoM('COM10', 90)
+                                        OpenServoM('COM10', 1)
                                         connexion.commit()
                                         break
+                                else:
+                                     OpenServoM('COM10', 0)
+                                     print("Abonnement expirer")   
                             else :
-                                  print("Abonnement expirer")
                                   sub_id = resultat[0][3]
                                   requete_subscription = "SELECT * FROM subscription WHERE id = %s"
                                   parametres_subscription = (sub_id,)
@@ -108,16 +108,14 @@ while True:
                                             status_id = 1
                                             parametres_insert_status = (id_vehicle, status_id, datetime.now().date(), 24)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
-                                            OpenServoM('COM10', 90)
+                                            OpenServoM('COM10', 1)
                                             connexion.commit()
                                         elif type_abonnement == "moyen":
                                             requete_insert_status = "INSERT INTO stat_vehic (id_vehicule, id_status , date ,time ) VALUES (%s, %s , %s , %s )"
                                             status_id = 1 
                                             parametres_insert_status = (id_vehicle, status_id ,datetime.now().date() , 48)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
-                                            OpenServoM('COM10', 90)
-                                            time.sleep(10)
-                                            CloseServoM('C0M3',0)
+                                            OpenServoM('COM10', 1)
                                             connexion.commit()
                                             break
                                             
@@ -126,9 +124,7 @@ while True:
                                             status_id = 1
                                             parametres_insert_status = (id_vehicle, status_id ,datetime.now().date() , 86)
                                             curseur.execute(requete_insert_status, parametres_insert_status)
-                                            OpenServoM('COM10', 90)
-                                            time.sleep(10)
-                                            CloseServoM('C0M3',0)
+                                            OpenServoM('COM10', 1)
                                             connexion.commit()
                                             break
                                     

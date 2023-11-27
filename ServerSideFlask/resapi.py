@@ -340,6 +340,16 @@ def checkAutorizationVehicleAndAsigneStatus():
     else:
         return jsonify({"status":400 , "message": "Not Autorized and status not asigned"})
 
+
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="5000", debug=True)
     
