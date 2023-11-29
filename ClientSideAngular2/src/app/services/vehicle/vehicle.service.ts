@@ -3,11 +3,15 @@ import { Injectable } from '@angular/core';
 import { Vehicle } from '../../models/Vehicle';
 import { Observable } from 'rxjs';
 
+import { VEHICLE_ADD_URL } from '../../constants/URLS';
+import { VEHICLES_URL } from '../../constants/URLS';
+import { VEHICLE_BY_ID_URL } from '../../constants/URLS';
+import { VEHICLES_BY_USER_ID_URL } from '../../constants/URLS';
+
 @Injectable({
   providedIn: 'root'
 })
 export class VehicleService {
-  url  = "http://localhost:5000" ;
 
   constructor(private http :HttpClient) {}
 
@@ -19,28 +23,38 @@ export class VehicleService {
       userId: userId,
       abonnement_id: abonnement_id
     };
-       this.http.post(this.url+'/saveVehicule', data)
-      .subscribe((response) => {
-        console.log(response);
-      }, (error) => {
-        console.error(error);
-      });
+    console.log(data);
+       this.http.post(VEHICLE_ADD_URL, data ).subscribe(
+      responseData => {
+        console.log(responseData);
 
+      }
+    );
   }
 
   getAllVehicles(): Observable<{ vehicles: Vehicle[] }> {
-    return this.http.get<{ vehicles: Vehicle[] }>(this.url + '/vehicles');
+    return this.http.get<{ vehicles: Vehicle[] }>(VEHICLES_URL);
   }
 
   getVehiculeById(id: number): Observable<{ vehicle: Vehicle }> {
 
-    return this.http.get<{ vehicle: Vehicle }>(this.url + '/vehicle/' + id);
+    return this.http.get<{ vehicle: Vehicle }>(VEHICLE_BY_ID_URL+ id);
 
   }
   getVehiclesByUserId(id: number): Observable<{ vehicles: Vehicle[] }> {
+    console.log("VEHICLES_BY_USER_ID_URL + id :");
+    console.log(VEHICLES_BY_USER_ID_URL + id);
 
-      return this.http.get<{ vehicles: Vehicle[] }>(this.url + '/getVehiclesByUserId/' + id);
+    if(id == 1)
+    {
+
+      return this. getAllVehicles();
+
+    }else
+    {
+      return this.http.get<{ vehicles: Vehicle[] }>(VEHICLES_BY_USER_ID_URL + id);
 
     }
 
+}
 }

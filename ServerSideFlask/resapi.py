@@ -11,6 +11,8 @@ import time
 app = Flask(__name__)
 CORS(app)
 
+
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1:3306/parking'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 mydb = SQLAlchemy(app)
@@ -48,10 +50,11 @@ class Vehicle(mydb.Model):
             'model': self.model,
             'user_id': self.user_id,
             'subscription': self.subscription.serialize2(),
-            'statuses': list(map(lambda status: status.serialize(), self.status))
+            # list of statuses sorted by date
+            'statuses': list(map(lambda status: status.serialize(), sorted(self.status, key=lambda status: status.date, reverse=True)))
         }
     
-    
+   
     
 class Statuss(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
@@ -85,6 +88,7 @@ class Subscription(mydb.Model):
             'description': self.description,
             # Add more fields as needed
         }
+
 
 class User(mydb.Model):
     id = mydb.Column(mydb.Integer, primary_key=True)
@@ -130,6 +134,31 @@ def updateDataBase():
 # API and Routes
 # for Vehicle
 
+@app.route('/dashboardStatistiques', methods=['GET'])
+def dashboardStatistiques():
+    
+    totalPlaces = 20
+    
+    # get the number of vehicles
+    vehicles = Vehicle.query.all()
+    nbr_vehicles = len(vehicles)
+    # get the number of users
+    users = User.query.all()
+    nbr_users = len(users)
+    # get the number of subscriptions
+    subscriptions = Subscription.query.all()
+    nbr_subscriptions = len(subscriptions)
+    # get the number of status
+    statuss = Statuss.query.all()
+    nbr_statuss = len(statuss)
+    # get the number of statussVehicule
+    statussVehicule = StatussVehicule.query.all()
+    nbr_statussVehicule = len(statussVehicule)
+    
+    availablePlaces = totalPlaces - nbr_vehicles
+    return jsonify({"dashboard":{"nbr_vehicles": nbr_vehicles,"nbr_users": nbr_users,"nbr_subscriptions": nbr_subscriptions,"nbr_statuss": nbr_statuss,"nbr_statussVehicule": nbr_statussVehicule, "availablePlaces": availablePlaces}})
+
+
 # login 
 @app.route('/login', methods=['POST'])
 def login():
@@ -156,8 +185,8 @@ def login():
         return jsonify({"status":400 , "message": "username is incorrect"})
 
 
-# get vehicles by user id get Method
-@app.route('/getVehiclesByUserId/<int:id>', methods=['GET'])
+
+@app.route('/vehicles/getVehiclesByUserId/<int:id>', methods=['GET'])
 def getVehiclesByUserId(id):
     vehicles = Vehicle.query.filter_by(user_id=id).all()
     vehicles = list(map(lambda vehicle: vehicle.serialize(), vehicles))
@@ -169,6 +198,14 @@ def get_vehicles():
     vehicles = Vehicle.query.all()
     vehicles = list(map(lambda vehicle: vehicle.serialize(), vehicles))
     return jsonify({"vehicles": vehicles})
+
+
+
+@app.route('/vehicles/vehicle/<int:id>', methods=['GET'])
+def get_vehicle(id):
+    vehicle = Vehicle.query.get(id)
+    return jsonify(vehicle.serialize())
+
 
 
 @app.route('/saveVehicule', methods=['POST'])

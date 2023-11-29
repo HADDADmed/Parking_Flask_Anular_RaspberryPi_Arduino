@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../models/User';
 import { Observable } from 'rxjs';
+import { USER_ADD_URL } from '../../constants/URLS';
+import { USERS_URL} from '../../constants/URLS';
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
 
-   apiUrl = 'http://127.0.0.1:5000/';
 
   constructor(
     private http: HttpClient
@@ -17,10 +19,10 @@ export class UserService {
 
    getAllUsers() : Observable<{ users: User[] }>
     {
-      return this.http.get<{ users: User[] }>(this.apiUrl+"users");
+      return this.http.get<{ users: User[] }>(USERS_URL);
 }
 saveUser(userData: any): Observable<any> {
-  return this.http.post(`${this.apiUrl}/saveUser`, userData);
+  return this.http.post(USER_ADD_URL, userData);
 }
 
 getUserFromLocalStorage () : User {

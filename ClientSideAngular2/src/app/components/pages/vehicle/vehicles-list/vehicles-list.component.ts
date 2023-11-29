@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SideBarComponent } from "../../../partials/side-bar/side-bar.component";
 import { Vehicle } from '../../../../models/Vehicle';
 import { VehicleService } from '../../../../services/vehicle/vehicle.service';
+ 
 
 @Component({
     selector: 'app-vehicles-list',
@@ -14,7 +15,11 @@ import { VehicleService } from '../../../../services/vehicle/vehicle.service';
 export class VehiclesListComponent {
 
     vehicles: Vehicle[] = [];
-    constructor(private vehicleService: VehicleService) { }
+    constructor(private vehicleService: VehicleService,
+
+      ) {
+
+    }
 
     ngOnInit() {
       this.vehicleService.getAllVehicles().subscribe(
@@ -34,5 +39,8 @@ export class VehiclesListComponent {
         }
       );
     }
+
+
+
 
 }

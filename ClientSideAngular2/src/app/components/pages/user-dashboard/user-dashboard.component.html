@@ -12,8 +12,8 @@
         <div class="row g-0">
             <div class="col-md-6">
                 <!-- image of an old car -->
-                <img src="https://www.automobile-magazine.fr/asset/cms/840x394/177505/config/106686/peugeot-308-2021-essai-avis-technique.jpg" class="card-img" alt="...">
-            </div>
+                <img src="assets/pngwin.png" class="card-img" alt="...">
+              </div>
             <div class="col-md-6">
                 <div class="card-body d-flex flex-column justify-content-between h-100">
                     <div>
@@ -25,8 +25,9 @@
                     </div>
                     <div>
                         <p class="mb-0">Time Left: 25 h</p>
-                        <a href="#" class="btn btn-primary rounded rounded-pill mt-3">Download Report</a>
+                        <a   class="btn btn-primary rounded rounded-pill mt-3" (click)="generatePdf(vehicle.id)">Download Report</a>
                     </div>
+
                 </div>
             </div>
         </div>

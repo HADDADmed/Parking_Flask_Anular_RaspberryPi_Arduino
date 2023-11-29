@@ -2,12 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {  Router } from '@angular/router';
 import { UserResponse } from '../../interfaces/UserResponse';
+import { USER_LOGIN_URL } from '../../constants/URLS';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  private apiUrl = 'http://127.0.0.1:5000/';
+
    constructor(private http: HttpClient,    private router: Router
     ) {}
 
@@ -16,7 +17,7 @@ export class LoginService {
     console.log('2password: ' + password);
 
     return this.http
-      .post<UserResponse>(`${this.apiUrl}login`, {
+      .post<UserResponse>(USER_LOGIN_URL, {
         username: username,
         password: password,
       })
