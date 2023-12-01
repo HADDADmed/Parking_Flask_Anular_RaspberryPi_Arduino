@@ -16,7 +16,7 @@ export const USERS_URL = BASE_URL_USED + '/users'
 export const VEHICLE_ADD_URL = BASE_URL_USED + '/saveVehicule'
 export const VEHICLES_URL = BASE_URL_USED + '/vehicles'
 export const VEHICLE_BY_ID_URL = VEHICLES_URL + '/vehicle/'
-export const VEHICLES_BY_USER_ID_URL = VEHICLES_URL + '/getVehiclesByUserId/'
+export const VEHICLES_BY_USER_ID_URL = BASE_URL_USED + '/getVehiclesByUserId/'
 
 
 export const DASHBOARD_URL = BASE_URL_USED + '/dashboardStatistiques'

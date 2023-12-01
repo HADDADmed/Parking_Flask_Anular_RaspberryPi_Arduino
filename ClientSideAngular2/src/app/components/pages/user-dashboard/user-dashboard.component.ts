@@ -7,6 +7,7 @@ import { User } from '../../../models/User';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Content } from 'pdfmake/interfaces';
+import { VEHICLES_BY_USER_ID_URL } from '../../../constants/URLS';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
@@ -33,7 +34,7 @@ export class UserDashboardComponent {
       this.user = new User( '1', '1', '', 1, 1);
     }
 
-      this.vehicleService.getVehiclesByUserId(this.user.id?this.user.id:1).subscribe({
+      this.vehicleService.getVehiclesByUserId(VEHICLES_BY_USER_ID_URL+this.user.id?this.user.id:1).subscribe({
         next: (data: { vehicles: Vehicle[] }) => {
           console.log('Received vehicle data:', data);
 
